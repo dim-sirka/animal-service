@@ -1,0 +1,23 @@
+version: '3'
+services:
+  animal-db:
+    image: postgres
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: animal_db
+
+  animal-service:
+    image: openjdk:11
+    ports:
+      - "8070:8080"
+    environment:
+      DB_URL: jdbc:postgresql://animal-db:5432/animal_db
+    volumes:
+      - ./build/libs:/animal-service
+    command: ["java", "--enable-preview", "-jar", "/animal-service/animal-service-0.0.1-SNAPSHOT.jar"]
+    depends_on:
+      - animal-db

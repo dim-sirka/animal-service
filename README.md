@@ -30,3 +30,7 @@ Web-app for the animal shelter "Dim Sirka".
                  -p 5433:5432 \
                  -d postgres 
  ```
+
+## Running multi-container Instructions
+* docker-compose up -- run animal-service app and animal-db containers
+* docker-compose down -- stop animal-service app and animal-db containers
