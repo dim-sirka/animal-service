@@ -11,13 +11,10 @@ services:
       POSTGRES_DB: animal_db
 
   animal-service:
-    image: openjdk:11
+    build: ./Dockerfile
     ports:
       - "8070:8080"
     environment:
       DB_URL: jdbc:postgresql://animal-db:5432/animal_db
-    volumes:
-      - ./build/libs:/animal-service
-    command: ["java", "--enable-preview", "-jar", "/animal-service/animal-service-0.0.1-SNAPSHOT.jar"]
     depends_on:
       - animal-db
