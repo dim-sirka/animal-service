@@ -19,3 +19,14 @@ Web-app for the animal shelter "Dim Sirka".
  * docker build -t animal-service . - build the docker image with name animal-service
  * docker run --name animal-service-container -p 8070:8080 -d animal-service - run container with name animal-service-container based on the animal-service image
  (make calls to port: `8070`)
+ 
+## Running DB Instructions
+ * create and run animal_db container locally
+ ```
+ docker run --name animal-db-container \
+                 -e POSTGRES_PASSWORD=postgres \
+                 -e POSTGRES_USERNAME=postgres \
+                 -e POSTGRES_DB=animal_db \
+                 -p 5433:5432 \
+                 -d postgres 
+ ```
