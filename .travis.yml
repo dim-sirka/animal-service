@@ -3,6 +3,10 @@ language: java
 jdk:
   - openjdk11
 
+addons:
+  sonarcloud:
+    organization: "dim-sirka"
+
 before_install:
   - chmod +x gradlew
 
