@@ -18,23 +18,24 @@ import java.util.Map;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        return errors;
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errors);
     }
 
     @ExceptionHandler({EntityNotFoundException.class})
     public ResponseEntity<Map<String, String>> handleEntityNotFoundException(Exception e) {
         log.warn(e.getMessage(), e);
         Map<String, String> errors = new HashMap<>();
-        errors.put("Error message" , e.getLocalizedMessage());
+        errors.put("error" , e.getLocalizedMessage());
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(errors);

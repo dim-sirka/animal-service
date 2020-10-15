@@ -41,6 +41,6 @@ public class AnimalServiceImpl implements AnimalService {
 
     private Animal getByIdOrThrowException(Long id){
         return animalRepository.findById(id).
-                orElseThrow(()-> new AnimalNotFoundException("Animal with a specified id isn't found!"));
+                orElseThrow(()-> new AnimalNotFoundException("Animal with a specified id not found!"));
     }
 }
