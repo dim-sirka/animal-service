@@ -1,11 +1,11 @@
 package com.dimsirka.animalservice.controllers;
 
 import com.dimsirka.animalservice.dtoes.AnimalDto;
-import com.dimsirka.animalservice.entities.Animal;
 import com.dimsirka.animalservice.mapper.AnimalDtoMapper;
 import com.dimsirka.animalservice.services.AnimalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,13 +31,13 @@ public class AnimalController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AnimalDto create(@RequestBody AnimalDto animalDto){
+    public AnimalDto create(@Validated @RequestBody AnimalDto animalDto){
         return mapper.toDto(animalService.create(mapper.toEntity(animalDto)));
     }
 
     @PutMapping("/{animalId}")
     @ResponseStatus(HttpStatus.OK)
-    public AnimalDto update(@RequestBody  AnimalDto animalDto, @PathVariable Long animalId){
+    public AnimalDto update(@Validated @RequestBody AnimalDto animalDto, @PathVariable Long animalId){
         animalDto.setId(animalId);
         return mapper.toDto(animalService.update(mapper.toEntity(animalDto)));
     }
