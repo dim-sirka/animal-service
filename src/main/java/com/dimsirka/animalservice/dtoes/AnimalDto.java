@@ -19,13 +19,13 @@ import java.sql.Timestamp;
 @Builder
 public class AnimalDto {
     private Long id;
-    @NotBlank( message = "Field should be specified")
+    @NotBlank(message = "Animal name should be specified")
     private String name;
-    @NotNull( message = "Field should be specified")
+    @NotNull(message = "Animal type should be specified")
     private AnimalType animalType;
-    @NotBlank( message = "Field should be specified")
+    @NotBlank(message = "Description should be specified")
     private String description;
-    @NotNull( message = "Field should be specified")
+    @NotNull(message = "Animal status should be specified")
     private AnimalStatus animalStatus;
     private Timestamp createdDate;
     private Timestamp updatedDate;
