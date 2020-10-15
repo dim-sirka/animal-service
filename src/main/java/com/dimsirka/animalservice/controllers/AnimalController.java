@@ -1,6 +1,8 @@
 package com.dimsirka.animalservice.controllers;
 
+import com.dimsirka.animalservice.dtoes.AnimalDto;
 import com.dimsirka.animalservice.entities.Animal;
+import com.dimsirka.animalservice.mapper.AnimalDtoMapper;
 import com.dimsirka.animalservice.services.AnimalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,34 +21,36 @@ import java.util.List;
 @RequestMapping("api/animals")
 public class AnimalController {
     private AnimalService animalService;
+    private AnimalDtoMapper mapper;
 
     @Autowired
-    public AnimalController(AnimalService animalService) {
+    public AnimalController(AnimalService animalService, AnimalDtoMapper mapper) {
         this.animalService = animalService;
+        this.mapper = mapper;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Animal create(@RequestBody Animal animal){
-        return animalService.create(animal);
+    public AnimalDto create(@RequestBody AnimalDto animalDto){
+        return mapper.toDto(animalService.create(mapper.toEntity(animalDto)));
     }
 
     @PutMapping("/{animalId}")
     @ResponseStatus(HttpStatus.OK)
-    public Animal update(@RequestBody Animal animal, @PathVariable Long animalId){
-        animal.setId(animalId);
-        return animalService.update(animal);
+    public AnimalDto update(@RequestBody  AnimalDto animalDto, @PathVariable Long animalId){
+        animalDto.setId(animalId);
+        return mapper.toDto(animalService.update(mapper.toEntity(animalDto)));
     }
 
     @GetMapping("/{animalId}")
     @ResponseStatus(HttpStatus.OK)
-    public Animal getById(@PathVariable Long animalId){
-        return animalService.getById(animalId);
+    public AnimalDto getById(@PathVariable Long animalId){
+        return mapper.toDto(animalService.getById(animalId));
     }
 
-    @GetMapping()
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Animal> getAll(){
-        return animalService.getAll();
+    public List<AnimalDto> getAll(){
+        return mapper.toDtoList(animalService.getAll());
     }
 }

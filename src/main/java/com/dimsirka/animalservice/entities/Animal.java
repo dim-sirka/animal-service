@@ -21,7 +21,7 @@ public class Animal {
     private Long id;
     private String name;
     @Enumerated(EnumType.STRING)
-    private AnimalType type;
+    private AnimalType animalType;
     private String description;
     @Enumerated(EnumType.STRING)
     private AnimalStatus animalStatus;
