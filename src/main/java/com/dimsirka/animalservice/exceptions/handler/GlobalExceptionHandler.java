@@ -1,5 +1,6 @@
 package com.dimsirka.animalservice.exceptions.handler;
 
+import com.dimsirka.animalservice.exceptions.EntityDuplicateException;
 import com.dimsirka.animalservice.exceptions.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,16 @@ public class GlobalExceptionHandler {
         errors.put("error" , e.getLocalizedMessage());
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .body(errors);
+    }
+
+    @ExceptionHandler({EntityDuplicateException.class})
+    public ResponseEntity<Map<String, String>> handleEntityDuplicateException(Exception e) {
+        log.warn(e.getMessage(), e);
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error" , e.getLocalizedMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(errors);
     }
 }

@@ -3,6 +3,7 @@ package com.dimsirka.animalservice.controllers;
 import com.dimsirka.animalservice.dtoes.AnimalDto;
 import com.dimsirka.animalservice.entities.Animal;
 import com.dimsirka.animalservice.entities.AnimalStatus;
+import com.dimsirka.animalservice.exceptions.EntityDuplicateException;
 import com.dimsirka.animalservice.mapper.AnimalDtoMapper;
 import com.dimsirka.animalservice.services.AnimalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,18 +28,26 @@ public class AnimalController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public AnimalDto create(@Validated @RequestBody AnimalDto animalDto){
-        return mapper.toDto(animalService.create(mapper.toEntity(animalDto)));
+        try {
+            return mapper.toDto(animalService.create(mapper.toEntity(animalDto)));
+        }catch (RuntimeException e){
+            throw new EntityDuplicateException("Animal with a specified name exists!");
+        }
     }
 
     @PutMapping("/{animalId}")
     @ResponseStatus(HttpStatus.OK)
     public AnimalDto update(@Validated @RequestBody AnimalDto animalDto, @PathVariable Long animalId){
-        Animal createdAnimal = animalService.getById(animalId);
-        createdAnimal.setName(animalDto.getName());
-        createdAnimal.setAnimalStatus(animalDto.getAnimalStatus());
-        createdAnimal.setAnimalType(animalDto.getAnimalType());
-        createdAnimal.setDescription(animalDto.getDescription());
-        return mapper.toDto(animalService.update(createdAnimal));
+        try {
+            Animal createdAnimal = animalService.getById(animalId);
+            createdAnimal.setName(animalDto.getName());
+            createdAnimal.setAnimalStatus(animalDto.getAnimalStatus());
+            createdAnimal.setAnimalType(animalDto.getAnimalType());
+            createdAnimal.setDescription(animalDto.getDescription());
+            return mapper.toDto(animalService.update(createdAnimal));
+        }catch (RuntimeException e){
+            throw new EntityDuplicateException("Animal with a specified name exists!");
+        }
     }
 
     @GetMapping("/{animalId}")
