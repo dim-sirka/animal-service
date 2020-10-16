@@ -7,6 +7,8 @@ import com.dimsirka.animalservice.exceptions.EntityDuplicateException;
 import com.dimsirka.animalservice.mapper.AnimalDtoMapper;
 import com.dimsirka.animalservice.services.AnimalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.repository.query.JpaQueryExecution;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +32,7 @@ public class AnimalController {
     public AnimalDto create(@Validated @RequestBody AnimalDto animalDto){
         try {
             return mapper.toDto(animalService.create(mapper.toEntity(animalDto)));
-        }catch (RuntimeException e){
+        }catch (DataIntegrityViolationException e){
             throw new EntityDuplicateException("Animal with a specified name exists!");
         }
     }
@@ -45,7 +47,7 @@ public class AnimalController {
             createdAnimal.setAnimalType(animalDto.getAnimalType());
             createdAnimal.setDescription(animalDto.getDescription());
             return mapper.toDto(animalService.update(createdAnimal));
-        }catch (RuntimeException e){
+        }catch (DataIntegrityViolationException e){
             throw new EntityDuplicateException("Animal with a specified name exists!");
         }
     }
