@@ -1,11 +1,9 @@
 package com.dimsirka.animalservice.services.impl;
 
-import com.dimsirka.animalservice.controllers.OrderController;
-import com.dimsirka.animalservice.entities.Animal;
 import com.dimsirka.animalservice.entities.Order;
-import com.dimsirka.animalservice.exceptions.AnimalNotFoundException;
 import com.dimsirka.animalservice.exceptions.OrderNotFoundException;
-import com.dimsirka.animalservice.repositories.AnimalRepository;
+import com.dimsirka.animalservice.exceptions.OrderNotFoundException;
+import com.dimsirka.animalservice.repositories.OrderRepository;
 import com.dimsirka.animalservice.repositories.OrderRepository;
 import com.dimsirka.animalservice.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
 
     @Autowired
-    public OrderServiceImpl(AnimalRepository animalRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository) {
 
         this.orderRepository = orderRepository;
     }
