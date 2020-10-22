@@ -1,10 +1,22 @@
 package com.dimsirka.animalservice.entities;
 
-import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -14,6 +26,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
+@ToString
 @Table(name = "animals")
 public class Animal {
     @Id
@@ -21,14 +34,15 @@ public class Animal {
     private Long id;
     private String name;
     @Enumerated(EnumType.STRING)
-    private AnimalType type;
+    private AnimalType animalType;
     private String description;
     @Enumerated(EnumType.STRING)
     private AnimalStatus animalStatus;
-    @CreatedDate
+    @CreationTimestamp
     private Timestamp createdDate;
-    @LastModifiedDate
+    @UpdateTimestamp
     private Timestamp updatedDate;
+    @ToString.Exclude
     @OneToMany(mappedBy = "animal")
     private List<Order> orders;
 }
