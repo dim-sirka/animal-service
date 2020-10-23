@@ -1,8 +1,6 @@
 package com.dimsirka.animalservice.controllers;
 
 import com.dimsirka.animalservice.dtoes.OrderDto;
-import com.dimsirka.animalservice.entities.Order;
-import com.dimsirka.animalservice.entities.OrderStatus;
 import com.dimsirka.animalservice.mapper.OrderDtoMapper;
 import com.dimsirka.animalservice.services.OrderService;
 import org.springframework.http.HttpStatus;
