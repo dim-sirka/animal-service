@@ -61,6 +61,4 @@ public class OrderController {
         persistentOrder.setOrderStatus(OrderStatus.CANCELED);
         orderService.update(persistentOrder);
     }
-
-
 }
