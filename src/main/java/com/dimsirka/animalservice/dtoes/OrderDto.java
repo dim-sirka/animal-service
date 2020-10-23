@@ -34,4 +34,3 @@ public class OrderDto {
     private Long animalId;
 
 }
-
