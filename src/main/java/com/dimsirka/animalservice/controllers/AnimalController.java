@@ -2,19 +2,13 @@ package com.dimsirka.animalservice.controllers;
 
 import com.dimsirka.animalservice.dtoes.AnimalDto;
 import com.dimsirka.animalservice.entities.Animal;
+import com.dimsirka.animalservice.entities.AnimalStatus;
 import com.dimsirka.animalservice.mapper.AnimalDtoMapper;
 import com.dimsirka.animalservice.services.AnimalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -57,5 +51,11 @@ public class AnimalController {
     @ResponseStatus(HttpStatus.OK)
     public List<AnimalDto> getAll(){
         return mapper.toDtoList(animalService.getAll());
+    }
+
+    @GetMapping("/")
+    @ResponseStatus(HttpStatus.OK)
+    public List<AnimalDto> getByIdAndAnimalStatus(@RequestParam AnimalStatus animalStatus){
+        return mapper.toDtoList(animalService.getAllByAnimalStatus(animalStatus));
     }
 }

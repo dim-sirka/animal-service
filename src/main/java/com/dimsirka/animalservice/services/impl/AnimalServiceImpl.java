@@ -1,6 +1,7 @@
 package com.dimsirka.animalservice.services.impl;
 
 import com.dimsirka.animalservice.entities.Animal;
+import com.dimsirka.animalservice.entities.AnimalStatus;
 import com.dimsirka.animalservice.exceptions.AnimalNotFoundException;
 import com.dimsirka.animalservice.repositories.AnimalRepository;
 import com.dimsirka.animalservice.services.AnimalService;
@@ -37,6 +38,11 @@ public class AnimalServiceImpl implements AnimalService {
     @Override
     public List<Animal> getAll() {
         return animalRepository.findAll();
+    }
+
+    @Override
+    public List<Animal> getAllByAnimalStatus(AnimalStatus animalStatus) {
+        return animalRepository.findAllByAnimalStatus(animalStatus);
     }
 
     private Animal getByIdOrThrowException(Long id){
