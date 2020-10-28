@@ -30,13 +30,8 @@ public class AdminController {
     @PutMapping("/{adminId}")
     @ResponseStatus(HttpStatus.OK)
     public AdminDto update(@Validated @RequestBody AdminDto adminDto, @PathVariable Long adminId){
-        Admin createdAdmin = adminService.getById(adminId);
-        createdAdmin.setBankAccount(adminDto.getBankAccount());
-        createdAdmin.setFirstName(adminDto.getFirstName());
-        createdAdmin.setLastName(adminDto.getLastName());
-        createdAdmin.setEmail(adminDto.getEmail());
-        createdAdmin.setPassword(adminDto.getPassword());
-        return mapper.toDto(adminService.update(createdAdmin));
+        adminDto.setId(adminId);
+        return mapper.toDto(adminService.update(mapper.toEntity(adminDto)));
     }
 
     @GetMapping("/{adminId}")

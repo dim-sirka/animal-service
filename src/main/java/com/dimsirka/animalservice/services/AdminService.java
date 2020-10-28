@@ -8,4 +8,6 @@ public interface AdminService {
     Admin update(Admin admin);
 
     Admin getById(Long id);
+
+    Admin getByEmail(String email);
 }

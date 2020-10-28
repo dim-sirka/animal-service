@@ -36,9 +36,10 @@ dependencies {
     
     //for dto validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-
     //for tests
     testImplementation 'org.testcontainers:postgresql:1.15.0-rc2'
+    //for spring security(authentication and authorization)
+    implementation 'org.springframework.boot:spring-boot-starter-security:2.3.4.RELEASE'
 }
 
 test {
