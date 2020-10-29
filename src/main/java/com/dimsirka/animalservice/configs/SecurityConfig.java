@@ -1,5 +1,7 @@
-package com.dimsirka.animalservice.security;
+package com.dimsirka.animalservice.configs;
 
+import com.dimsirka.animalservice.security.RestAuthenticationEntryPoint;
+import com.dimsirka.animalservice.security.TokenFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

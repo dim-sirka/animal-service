@@ -1,4 +1,4 @@
-package com.dimsirka.animalservice.security;
+package com.dimsirka.animalservice.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
