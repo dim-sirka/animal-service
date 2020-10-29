@@ -1,9 +1,13 @@
 package com.dimsirka.animalservice.dtoes;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 
@@ -13,7 +17,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Builder
 @ToString
-public class AdminDto {
+public class AdminDto{
     private Long id;
     @NotBlank(message = "First name should be specified")
     private String firstName;

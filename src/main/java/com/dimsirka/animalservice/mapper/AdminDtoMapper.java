@@ -15,12 +15,12 @@ public class AdminDtoMapper implements EntityDtoMapper<Admin, AdminDto> {
                 .lastName(admin.getLastName())
                 .createdDate(admin.getCreatedDate())
                 .updatedDate(admin.getUpdatedDate())
-                .id(admin.getId())
-                .password(admin.getPassword()).build();
+                .id(admin.getId()).build();
     }
 
     public Admin toEntity(AdminDto admin){
         return Admin.builder()
+                .id(admin.getId())
                 .bankAccount(admin.getBankAccount())
                 .email(admin.getEmail())
                 .firstName(admin.getFirstName())

@@ -2,12 +2,14 @@ package com.dimsirka.animalservice.integration;
 
 import com.dimsirka.animalservice.AnimalServiceApplication;
 import com.dimsirka.animalservice.dtoes.AnimalDto;
+import com.dimsirka.animalservice.dtoes.LoginDto;
 import com.dimsirka.animalservice.entities.Animal;
 import com.dimsirka.animalservice.entities.AnimalStatus;
 import com.dimsirka.animalservice.entities.AnimalType;
 import com.dimsirka.animalservice.mapper.AnimalDtoMapper;
 import com.dimsirka.animalservice.repositories.AnimalRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,7 +31,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = AnimalServiceApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AnimalControllerTest extends AbstractContainer {
+class AnimalControllerTest extends AbstractContainer
+{
     @Autowired
     private TestRestTemplate template;
     @Autowired
@@ -38,7 +41,21 @@ class AnimalControllerTest extends AbstractContainer {
     private AnimalDtoMapper mapper;
     private HttpHeaders headers = new HttpHeaders();
     private HttpEntity<AnimalDto> request;
-    private final String exceptionMessage = "Animal with a specified id not found!";
+    private final String exceptionMessage = "Animal with a specified id isn't found!";
+
+    @BeforeEach
+    void loginAndAddAuthorizationHeader(){
+        final String url = "/api/login";
+        LoginDto loginDto = LoginDto.builder().username("test@gmail.com").password("Qwerty123").build();
+        HttpEntity<LoginDto> request = new HttpEntity<>(loginDto);
+        //Make call
+        ResponseEntity<String> response =
+                this.template.exchange(url, HttpMethod.POST, request, String.class);
+
+
+        //add token to header
+        headers.add("Authorization", "Bearer " + response.getBody());
+    }
 
     @AfterEach
     void afterEach() {

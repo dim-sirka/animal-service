@@ -20,6 +20,7 @@ public class AnimalDtoMapper implements EntityDtoMapper<Animal, AnimalDto> {
 
     public Animal toEntity(AnimalDto animal) {
         return Animal.builder()
+                .id(animal.getId())
                 .name(animal.getName())
                 .animalStatus(animal.getAnimalStatus())
                 .description(animal.getDescription())
