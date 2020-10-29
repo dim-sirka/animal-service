@@ -27,12 +27,6 @@ public class AdminController {
         this.mapper = mapper;
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public AdminDto create(@Validated @RequestBody AdminDto adminDto){
-        return mapper.toDto(adminService.create(mapper.toEntity(adminDto)));
-    }
-
     @PutMapping("/{adminId}")
     @ResponseStatus(HttpStatus.OK)
     public AdminDto update(@Validated @RequestBody AdminDto adminDto, @PathVariable Long adminId){
