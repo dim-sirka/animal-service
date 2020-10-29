@@ -19,6 +19,8 @@ import java.util.Map;
 @Slf4j
 public class GlobalExceptionHandler {
 
+    private static final String ERROR = "error";
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -36,7 +38,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleEntityNotFoundException(Exception e) {
         log.warn(e.getMessage(), e);
         Map<String, String> errors = new HashMap<>();
-        errors.put("error" , e.getLocalizedMessage());
+        errors.put(ERROR, e.getLocalizedMessage());
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(errors);
@@ -46,7 +48,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleEntityDuplicateException(Exception e) {
         log.warn(e.getMessage(), e);
         Map<String, String> errors = new HashMap<>();
-        errors.put("error" , e.getLocalizedMessage());
+        errors.put(ERROR, e.getLocalizedMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errors);
@@ -56,7 +58,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleBadAdminCredentialsException(Exception e) {
         log.warn(e.getLocalizedMessage());
         Map<String, String> errors = new HashMap<>();
-        errors.put("error" , e.getLocalizedMessage());
+        errors.put(ERROR, e.getLocalizedMessage());
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(errors);

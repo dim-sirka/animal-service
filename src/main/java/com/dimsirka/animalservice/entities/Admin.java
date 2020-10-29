@@ -43,7 +43,7 @@ public class Admin implements UserDetails{
     @UpdateTimestamp
     private Timestamp updatedDate;
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
-    private List<Token> tokens;
+    private transient List<Token> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

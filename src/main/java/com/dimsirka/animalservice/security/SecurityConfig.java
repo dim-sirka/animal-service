@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public FilterRegistrationBean myAuthenticationFilterRegistration(final TokenFilter filter) {
+    public FilterRegistrationBean<TokenFilter> myAuthenticationFilterRegistration(final TokenFilter filter) {
         final FilterRegistrationBean<TokenFilter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(filter);
         filterRegistrationBean.setEnabled(false);

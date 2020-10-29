@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = AnimalServiceApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AdminControllerTest extends AbstractContainer{
+class AdminControllerTest extends AbstractContainer{
     @Autowired
     private TestRestTemplate template;
     private HttpHeaders headers = new HttpHeaders();
