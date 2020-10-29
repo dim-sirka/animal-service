@@ -1,5 +1,6 @@
 package com.dimsirka.animalservice.services;
 
+import com.dimsirka.animalservice.dtoes.ResetPasswordDto;
 import com.dimsirka.animalservice.entities.Admin;
 
 public interface AdminService {
@@ -10,4 +11,6 @@ public interface AdminService {
     Admin getById(Long id);
 
     Admin getByEmail(String email);
+
+    void resetPassword(Admin admin, ResetPasswordDto resetPasswordDto);
 }

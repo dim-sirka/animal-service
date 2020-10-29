@@ -33,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
     public String login(LoginDto loginDto) {
         try {
             Admin persistentAdmin = adminService.getByEmail(loginDto.getUsername());
-            if (encoder.matches(loginDto.getPassword(), encoder.encode("Mar"))) {
+            if (encoder.matches(loginDto.getPassword(), persistentAdmin.getPassword())) {
                 return handleToken(persistentAdmin);
             }
             throw new IllegalArgumentException("Password is incorrect!");

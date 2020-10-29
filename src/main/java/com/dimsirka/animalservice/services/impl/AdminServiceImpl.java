@@ -1,13 +1,11 @@
 package com.dimsirka.animalservice.services.impl;
 
+import com.dimsirka.animalservice.dtoes.ResetPasswordDto;
 import com.dimsirka.animalservice.entities.Admin;
 import com.dimsirka.animalservice.exceptions.AdminNotFoundException;
 import com.dimsirka.animalservice.repositories.AdminRepository;
 import com.dimsirka.animalservice.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -50,5 +48,14 @@ public class AdminServiceImpl implements AdminService{
     public Admin getByEmail(String email) {
         return adminRepository.findAdminByEmail(email)
                 .orElseThrow(()->new AdminNotFoundException("Admin with a specified username isn't found!"));
+    }
+
+    @Override
+    public void resetPassword(Admin admin, ResetPasswordDto resetPasswordDto) {
+        if (!encoder.matches(resetPasswordDto.getOldPassword(), admin.getPassword())) {
+            throw new IllegalArgumentException("Incorrect an old password provided");
+        }
+        admin.setPassword(encoder.encode(resetPasswordDto.getNewPassword()));
+        adminRepository.save(admin);
     }
 }

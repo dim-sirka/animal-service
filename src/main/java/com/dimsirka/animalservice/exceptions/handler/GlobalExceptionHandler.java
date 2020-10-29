@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
                 .body(errors);
     }
 
-    @ExceptionHandler({EntityDuplicateException.class})
+    @ExceptionHandler({EntityDuplicateException.class, IllegalArgumentException.class})
     public ResponseEntity<Map<String, String>> handleEntityDuplicateException(Exception e) {
         log.warn(e.getMessage(), e);
         Map<String, String> errors = new HashMap<>();
