@@ -3,6 +3,7 @@ package com.dimsirka.animalservice.integration;
 import com.dimsirka.animalservice.AnimalServiceApplication;
 import com.dimsirka.animalservice.dtoes.AdminDto;
 import com.dimsirka.animalservice.dtoes.LoginDto;
+import com.dimsirka.animalservice.dtoes.ResetPasswordDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,6 +106,39 @@ public class AdminControllerTest extends AbstractContainer{
         //Verify AdminNotFoundException exception
         assertEquals(404, response.getStatusCodeValue());
         assertEquals(exceptionMessage, response.getBody().get("error"));
+    }
+
+    @Test
+    void resetPasswordTest_successFlow() {
+        ResetPasswordDto resetPasswordDto =  ResetPasswordDto.builder()
+                .oldPassword("Qwerty123").newPassword("Qwerty123").build();
+
+        //Make call
+        final String url = "/api/admins/reset-password";
+        HttpEntity<ResetPasswordDto> request = new HttpEntity<>(resetPasswordDto, headers);
+        ResponseEntity<Map<String, String>> response = this.template.exchange(
+                url, HttpMethod.POST, request,
+                new ParameterizedTypeReference<Map<String, String>>() {});
+
+        //Verify request succeed
+        assertEquals(200, response.getStatusCodeValue());
+    }
+
+    @Test
+    void resetPasswordTest_unSuccessFlow() {
+        ResetPasswordDto resetPasswordDto =  ResetPasswordDto.builder()
+                .oldPassword("Wrong").newPassword("Qwerty123").build();
+
+        //Make call
+        final String url = "/api/admins/reset-password";
+        HttpEntity<ResetPasswordDto> request = new HttpEntity<>(resetPasswordDto, headers);
+        ResponseEntity<Map<String, String>> response = this.template.exchange(
+                url, HttpMethod.POST, request,
+                new ParameterizedTypeReference<Map<String, String>>() {});
+
+        //Verify IllegalArgumentException exception
+        assertEquals(400, response.getStatusCodeValue());
+        assertEquals("Incorrect an old password provided", response.getBody().get("error"));
     }
 
     private static AdminDto getAdminDtoFixture(){

@@ -13,7 +13,8 @@ public final class RestAuthenticationEntryPoint implements AuthenticationEntryPo
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write("Bad credentials");
     }
 
 }

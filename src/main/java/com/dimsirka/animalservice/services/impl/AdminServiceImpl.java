@@ -34,7 +34,6 @@ public class AdminServiceImpl implements AdminService{
         persistentAdmin.setFirstName(admin.getFirstName());
         persistentAdmin.setLastName(admin.getLastName());
         persistentAdmin.setEmail(admin.getEmail());
-        persistentAdmin.setPassword(encoder.encode(admin.getPassword()));
         return adminRepository.save(persistentAdmin);
     }
 

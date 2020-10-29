@@ -2,6 +2,7 @@ package com.dimsirka.animalservice.security;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +31,7 @@ public class TokenFilter implements Filter {
         try {
             filterChain.doFilter(servletRequest, servletResponse);
         } catch (Exception ex) {
+            SecurityContextHolder.clearContext();
             log.error("Bad credentials for admin with token: <{}>", token);
         }
 

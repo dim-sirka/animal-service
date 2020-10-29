@@ -3,12 +3,12 @@ package com.dimsirka.animalservice.services.impl;
 import com.dimsirka.animalservice.dtoes.LoginDto;
 import com.dimsirka.animalservice.entities.Admin;
 import com.dimsirka.animalservice.entities.Token;
+import com.dimsirka.animalservice.exceptions.BadAdminCredentialsException;
 import com.dimsirka.animalservice.repositories.TokenRepository;
 import com.dimsirka.animalservice.services.AdminService;
 import com.dimsirka.animalservice.services.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("Password is incorrect!");
         }catch (RuntimeException e){
             log.error("Bad credentials for user <{}>", loginDto.getUsername(), e.getLocalizedMessage());
-            throw new BadCredentialsException("Credentials aren't correct");
+            throw new BadAdminCredentialsException("Credentials aren't correct");
         }
     }
 

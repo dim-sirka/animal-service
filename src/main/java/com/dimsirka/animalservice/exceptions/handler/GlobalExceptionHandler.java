@@ -1,11 +1,11 @@
 package com.dimsirka.animalservice.exceptions.handler;
 
+import com.dimsirka.animalservice.exceptions.BadAdminCredentialsException;
 import com.dimsirka.animalservice.exceptions.EntityDuplicateException;
 import com.dimsirka.animalservice.exceptions.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -52,8 +52,8 @@ public class GlobalExceptionHandler {
                 .body(errors);
     }
 
-    @ExceptionHandler({BadCredentialsException.class})
-    public ResponseEntity<Map<String, String>> handleBadCredentialsException(Exception e) {
+    @ExceptionHandler({BadAdminCredentialsException.class})
+    public ResponseEntity<Map<String, String>> handleBadAdminCredentialsException(Exception e) {
         log.warn(e.getLocalizedMessage());
         Map<String, String> errors = new HashMap<>();
         errors.put("error" , e.getLocalizedMessage());
