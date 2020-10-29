@@ -1,5 +1,6 @@
 package com.dimsirka.animalservice.security;
 
+import com.dimsirka.animalservice.entities.Token;
 import com.dimsirka.animalservice.repositories.TokenRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
+import java.sql.Timestamp;
+import java.time.Duration;
+import java.util.Date;
 
 
 @Component
@@ -26,8 +29,8 @@ public class TokenProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         TokenAuthentication tokenAuthentication = (TokenAuthentication) authentication;
 
-        return tokenRepository.findByToken(tokenAuthentication.getToken())
-                        .filter(Objects::nonNull)
+        return tokenRepository.findTokenByToken(tokenAuthentication.getToken())
+                        .filter(this::isValidToken)
                         .map(token->{
                             tokenAuthentication.setUserDetails(token.getAdmin());
                             tokenAuthentication.setAuthenticated(true);
@@ -40,5 +43,14 @@ public class TokenProvider implements AuthenticationProvider {
     @Override
     public boolean supports(Class<?> authenticationClass) {
         return TokenAuthentication.class.equals(authenticationClass);
+    }
+
+    private boolean isValidToken(Token token) {
+        Timestamp tokenCreatedTimestamp = token.getCreatedDate();
+        Timestamp currentTimestamp = new Timestamp(new Date().getTime());
+
+        Duration duration = Duration.between(tokenCreatedTimestamp.toInstant(), currentTimestamp.toInstant());
+        long diffHours = Math.abs(duration.toHours());
+        return diffHours <= 1;
     }
 }

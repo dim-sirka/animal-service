@@ -30,6 +30,6 @@ public class Token {
     private String token;
     @CreationTimestamp
     private Timestamp createdDate;
-    @ManyToOne(cascade = CascadeType.DETACH)
+    @ManyToOne
     private Admin admin;
 }
