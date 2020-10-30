@@ -30,3 +30,4 @@ mail.protocol: smtp
 mail.smtp.starttls.enable: true
 mail.debug: true
 mail.smtp.auth: true
+mail.adminEmail: ${ADMIN_EMAIL:admin@gmail.com}
