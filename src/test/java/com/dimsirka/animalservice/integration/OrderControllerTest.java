@@ -1,6 +1,7 @@
 package com.dimsirka.animalservice.integration;
 
 import com.dimsirka.animalservice.AnimalServiceApplication;
+import com.dimsirka.animalservice.dtoes.AnimalDto;
 import com.dimsirka.animalservice.dtoes.LoginDto;
 import com.dimsirka.animalservice.dtoes.OrderDto;
 import com.dimsirka.animalservice.entities.Animal;
@@ -22,8 +23,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = AnimalServiceApplication.class,
@@ -71,6 +75,126 @@ class OrderControllerTest extends AbstractContainer {
     void afterEach() {
         orderRepository.deleteAll();
         animalRepository.deleteAll();
+    }
+
+    @Test
+    void createOrderTest_successFlow() {
+        final String url = "/api/orders";
+        OrderDto requestDto = OrderDto.builder()
+                .animalId(testAnimal.getId())
+                .userEmail("user@gmail.com")
+                .userPhoneNumber("+380967834106")
+                .userName("NoName")
+                .build();
+
+        //Make call
+        ResponseEntity<OrderDto> response =
+                this.template.exchange(url, HttpMethod.POST,  new HttpEntity<>(requestDto, headers), OrderDto.class);
+
+        //Verify request succeed
+        assertEquals(201, response.getStatusCodeValue());
+        assertThat(requestDto)
+                .isEqualToIgnoringGivenFields(response.getBody(),
+                        "id", "createdDate", "updatedDate", "orderStatus");
+    }
+
+    @Test
+    void createOrderWithMissedFieldsTest_unSuccessFlow() {
+        final String url = "/api/orders";
+        OrderDto requestDto = OrderDto.builder()
+                .animalId(testAnimal.getId())
+                .userEmail("user@gmail.com")
+                .userPhoneNumber("+380967834106")
+                .userName("")
+                .build();
+
+        //Make call
+        ResponseEntity<Map<String, String>> response =
+                this.template.exchange(url, HttpMethod.POST, new HttpEntity<>(requestDto, headers), new ParameterizedTypeReference<Map<String, String>>() {});
+
+        //Verify this exception because of validation missed field
+        assertEquals(400, response.getStatusCodeValue());
+        assertEquals("User name should be specified", response.getBody().get("userName"));
+    }
+
+    @Test
+    void updateOrderTest_successFlow() {
+        OrderDto requestDto = getOrderDtoFixture();
+        Long animalId = orderRepository.save(mapper.toEntity(requestDto)).getId();
+        requestDto.setUserName("NewName");
+
+        //Make call
+        final String url = "/api/orders/" + animalId;
+        ResponseEntity<OrderDto> response =
+                this.template.exchange(url, HttpMethod.PUT, new HttpEntity<>(requestDto, headers), OrderDto.class);
+
+        //Verify request succeed
+        assertEquals(200, response.getStatusCodeValue());
+        assertThat(requestDto).isEqualToIgnoringGivenFields(response.getBody(), "id", "createdDate", "updatedDate");
+    }
+
+    @Test
+    void updateOrderTest_unSuccessFlow() {
+        OrderDto requestDto = getOrderDtoFixture();
+        requestDto.setUserName("NewName");
+
+        //Make call with fake animalId
+        final String url = "/api/orders/" + Integer.MAX_VALUE;
+        ResponseEntity<Map<String, String>> response = this.template.exchange(
+                url, HttpMethod.PUT, new HttpEntity<>(requestDto, headers),
+                new ParameterizedTypeReference<Map<String, String>>() {});
+
+        //Verify AnimalNotFoundException exception
+        assertEquals(404, response.getStatusCodeValue());
+        assertEquals(exceptionMessage, response.getBody().get("error"));
+    }
+
+    @Test
+    void getOrderByIdTest_successFlow() {
+        OrderDto requestDto = getOrderDtoFixture();
+        Long orderId = orderRepository.save(mapper.toEntity(requestDto)).getId();
+
+        //Make call
+        final String url = "/api/orders/" + orderId;
+        ResponseEntity<OrderDto> response =
+                this.template.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), OrderDto.class);
+
+        //Verify request succeed
+        assertEquals(200, response.getStatusCodeValue());
+        assertThat(requestDto).isEqualToIgnoringGivenFields(response.getBody(),
+                "id", "createdDate", "updatedDate");
+    }
+
+    @Test
+    void getAnimalByIdTest_unSuccessFlow() {
+        //Make call
+        final String url = "/api/orders/" + Integer.MAX_VALUE;
+        ResponseEntity<Map<String, String>> response = this.template.exchange(
+                url, HttpMethod.GET, new HttpEntity<>(headers),
+                new ParameterizedTypeReference<Map<String, String>>() {});
+
+        //Verify AnimalNotFoundException exception
+        assertEquals(404, response.getStatusCodeValue());
+        assertEquals(exceptionMessage, response.getBody().get("error"));
+    }
+
+    @Test
+    void getAllByIdTest_successFlow() {
+        Order order1 = mapper.toEntity(getOrderDtoFixture());
+        orderRepository.save(order1);
+
+        //Make call
+        final String url = "/api/orders";
+        ResponseEntity<List<OrderDto>> response = this.template.exchange(
+                url, HttpMethod.GET, new HttpEntity<>(headers),
+                new ParameterizedTypeReference<List<OrderDto>>() {});
+
+        //Verify request succeed
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(
+                mapper.toDtoList(Arrays.asList(order1)).toString(),
+                response.getBody().toString()
+        );
     }
 
     @Test
@@ -134,6 +258,7 @@ class OrderControllerTest extends AbstractContainer {
                 .animalId(testAnimal.getId())
                 .userEmail("user@gmail.com")
                 .userPhoneNumber("+380967834106")
-                .userName("").build();
+                .userName("userName")
+                .build();
     }
 }

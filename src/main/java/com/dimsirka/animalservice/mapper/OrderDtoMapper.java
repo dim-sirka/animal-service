@@ -25,6 +25,7 @@ public class OrderDtoMapper {
 
     public Order toEntity (OrderDto order){
         return Order.builder()
+                .id(order.getId())
                 .userEmail(order.getUserEmail())
                 .userPhoneNumber(order.getUserPhoneNumber())
                 .userName(order.getUserName())

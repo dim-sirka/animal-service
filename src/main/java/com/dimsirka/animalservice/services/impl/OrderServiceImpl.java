@@ -44,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order update(Order order) {
         Order persistentOrder = getByIdOrThrowException(order.getId());
-        persistentOrder.setOrderStatus(order.getOrderStatus());
+        persistentOrder.setUserName(order.getUserName());
         return orderRepository.save(persistentOrder);
     }
 
