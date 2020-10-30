@@ -262,7 +262,7 @@ class AnimalControllerTest extends AbstractContainer
 
     }
 
-    private static AnimalDto getAnimalDtoFixture(){
+    private AnimalDto getAnimalDtoFixture(){
         return AnimalDto.builder()
                 .animalStatus(AnimalStatus.FREE)
                 .animalType(AnimalType.CAT)

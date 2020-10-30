@@ -1,13 +1,12 @@
 package com.dimsirka.animalservice.integration;
 
 import com.dimsirka.animalservice.AnimalServiceApplication;
-import com.dimsirka.animalservice.dtoes.AnimalDto;
+import com.dimsirka.animalservice.dtoes.LoginDto;
 import com.dimsirka.animalservice.dtoes.OrderDto;
 import com.dimsirka.animalservice.entities.Animal;
 import com.dimsirka.animalservice.entities.AnimalStatus;
 import com.dimsirka.animalservice.entities.AnimalType;
 import com.dimsirka.animalservice.entities.Order;
-import com.dimsirka.animalservice.mapper.AnimalDtoMapper;
 import com.dimsirka.animalservice.mapper.OrderDtoMapper;
 import com.dimsirka.animalservice.repositories.AnimalRepository;
 import com.dimsirka.animalservice.repositories.OrderRepository;
@@ -39,7 +38,6 @@ class OrderControllerTest extends AbstractContainer {
     @Autowired
     private OrderDtoMapper mapper;
     private HttpHeaders headers = new HttpHeaders();
-    private HttpEntity<OrderDto> request;
     private final String exceptionMessage = "Order with a specified id isn't found!";
     private Animal testAnimal;
 
@@ -55,6 +53,20 @@ class OrderControllerTest extends AbstractContainer {
 
     }
 
+    @BeforeEach
+    void loginAndAddAuthorizationHeader(){
+        final String url = "/api/login";
+        LoginDto loginDto = LoginDto.builder().username("test@gmail.com").password("Qwerty123").build();
+        HttpEntity<LoginDto> request = new HttpEntity<>(loginDto);
+        //Make call
+        ResponseEntity<String> response =
+                this.template.exchange(url, HttpMethod.POST, request, String.class);
+
+
+        //add token to header
+        headers.add("Authorization", "Bearer " + response.getBody());
+    }
+
     @AfterEach
     void afterEach() {
         orderRepository.deleteAll();
@@ -64,19 +76,14 @@ class OrderControllerTest extends AbstractContainer {
     @Test
     void cancelOrderByIdTest_successFlow() {
         //create order
-        OrderDto requestDto = OrderDto.builder()
-                .animalId(testAnimal.getId())
-                .userEmail("user@gmail.com")
-                .userPhoneNumber("+380967834106")
-                .userName("")
-                .build();
+        OrderDto requestDto = getOrderDtoFixture();
         Order persistentOrder = mapper.toEntity(requestDto);
         orderRepository.save(persistentOrder);
 
         //Make call
         final String url = "/api/orders/cancel/" + persistentOrder.getId();
         ResponseEntity<Map<String, String>> response =
-                this.template.exchange(url, HttpMethod.PUT, null, new ParameterizedTypeReference<Map<String, String>>() {});
+                this.template.exchange(url, HttpMethod.PUT, new HttpEntity(null, headers), new ParameterizedTypeReference<Map<String, String>>() {});
 
         //Verify request succeed
         assertEquals(200, response.getStatusCodeValue());
@@ -87,10 +94,46 @@ class OrderControllerTest extends AbstractContainer {
         //Make call
         final String url = "/api/orders/cancel/" + Integer.MAX_VALUE;
         ResponseEntity<Map<String, String>> response =
-                this.template.exchange(url, HttpMethod.PUT, null, new ParameterizedTypeReference<Map<String, String>>() {});
+                this.template.exchange(url, HttpMethod.PUT, new HttpEntity(null, headers), new ParameterizedTypeReference<Map<String, String>>() {});
 
         //Verify OrderNotFoundException exception
         assertEquals(404, response.getStatusCodeValue());
         assertEquals(exceptionMessage, response.getBody().get("error"));
+    }
+
+    @Test
+    void confirmOrderByIdTest_successFlow() {
+        //create order
+        OrderDto requestDto = getOrderDtoFixture();
+        Order persistentOrder = mapper.toEntity(requestDto);
+        orderRepository.save(persistentOrder);
+
+        //Make call
+        final String url = "/api/orders/confirm/" + persistentOrder.getId();
+        ResponseEntity<Map<String, String>> response =
+                this.template.exchange(url, HttpMethod.PUT, new HttpEntity(null, headers), new ParameterizedTypeReference<Map<String, String>>() {});
+
+        //Verify request succeed
+        assertEquals(200, response.getStatusCodeValue());
+    }
+
+    @Test
+    void confirmOrderByIdTest_unSuccessFlow() {
+        //Make call
+        final String url = "/api/orders/confirm/" + Integer.MAX_VALUE;
+        ResponseEntity<Map<String, String>> response =
+                this.template.exchange(url, HttpMethod.PUT, new HttpEntity(null, headers), new ParameterizedTypeReference<Map<String, String>>() {});
+
+        //Verify OrderNotFoundException exception
+        assertEquals(404, response.getStatusCodeValue());
+        assertEquals(exceptionMessage, response.getBody().get("error"));
+    }
+
+    private OrderDto getOrderDtoFixture(){
+        return OrderDto.builder()
+                .animalId(testAnimal.getId())
+                .userEmail("user@gmail.com")
+                .userPhoneNumber("+380967834106")
+                .userName("").build();
     }
 }
