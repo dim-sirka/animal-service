@@ -30,13 +30,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class OrderControllerTest extends AbstractContainer {
     @Autowired
+    private OrderDtoMapper mapper;
+    @Autowired
     private TestRestTemplate template;
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
     private AnimalRepository animalRepository;
-    @Autowired
-    private OrderDtoMapper mapper;
     private HttpHeaders headers = new HttpHeaders();
     private HttpEntity<OrderDto> request;
     private final String exceptionMessage = "Order with a specified id isn't found!";
