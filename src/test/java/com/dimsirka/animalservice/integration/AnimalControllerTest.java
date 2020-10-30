@@ -17,7 +17,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -160,7 +162,7 @@ class AnimalControllerTest extends AbstractContainer {
     }
 
     @Test
-    void getAllByIdTest_successFlow() {
+    void getAllTest_successFlow() {
         Animal animal1 = Animal.builder()
                 .animalStatus(AnimalStatus.FREE)
                 .animalType(AnimalType.CAT)
@@ -186,5 +188,67 @@ class AnimalControllerTest extends AbstractContainer {
                 mapper.toDtoList(Arrays.asList(animal1, animal2)).toString(),
                 response.getBody().toString()
         );
+    }
+
+    @Test
+    void getAnimalsByStatusTest_successFlow() {
+        Animal animal1 = Animal.builder()
+                .animalStatus(AnimalStatus.FREE)
+                .animalType(AnimalType.CAT)
+                .name("Drago1")
+                .description("Drago is a friendly and easy-going pet. It needs to find a real family!").build();
+
+        Animal animal2 = Animal.builder()
+                .animalStatus(AnimalStatus.FREE)
+                .animalType(AnimalType.CAT)
+                .name("Drago2")
+                .description("Drago is a friendly and easy-going pet. It needs to find a real family!").build();
+        animalRepository.save(animal1);
+        animalRepository.save(animal2);
+
+        //Make call
+        final String url = "/api/animals";
+        URI uri = UriComponentsBuilder.fromPath(url)
+                .queryParam("animalStatus", "FREE")
+                .build().encode().toUri();
+
+        ResponseEntity<List<AnimalDto>> response = this.template.exchange(
+                uri, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<AnimalDto>>() {});
+
+        //Verify request succeed
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(
+                mapper.toDtoList(Arrays.asList(animal1, animal2)).toString(),
+                response.getBody().toString()
+        );
+    }
+    @Test
+    void getAnimalsEmptyListByStatusTest_successFlow() {
+        Animal animal1 = Animal.builder()
+                .animalStatus(AnimalStatus.FREE)
+                .animalType(AnimalType.CAT)
+                .name("Drago1")
+                .description("Drago is a friendly and easy-going pet. It needs to find a real family!").build();
+
+        Animal animal2 = Animal.builder()
+                .animalStatus(AnimalStatus.FREE)
+                .animalType(AnimalType.CAT)
+                .name("Drago2")
+                .description("Drago is a friendly and easy-going pet. It needs to find a real family!").build();
+        animalRepository.save(animal1);
+        animalRepository.save(animal2);
+        //Make call
+        final String url = "/api/animals";
+        URI uri = UriComponentsBuilder.fromPath(url)
+                .queryParam("animalStatus", "BOOKED")
+                .build().encode().toUri();
+
+        ResponseEntity<List<AnimalDto>> response = this.template.exchange(
+                uri, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<AnimalDto>>() {});
+
+        //Verify request succeed
+        assertEquals(200, response.getStatusCodeValue());
     }
 }
