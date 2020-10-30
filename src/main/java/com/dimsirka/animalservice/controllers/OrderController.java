@@ -1,31 +1,47 @@
 package com.dimsirka.animalservice.controllers;
 
 import com.dimsirka.animalservice.dtoes.OrderDto;
+import com.dimsirka.animalservice.entities.EmailMessageType;
 import com.dimsirka.animalservice.entities.Order;
 import com.dimsirka.animalservice.entities.OrderStatus;
 import com.dimsirka.animalservice.mapper.OrderDtoMapper;
+import com.dimsirka.animalservice.services.EmailService;
 import com.dimsirka.animalservice.services.OrderService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@PropertySource("classpath:application.yaml")
 @RestController
 @RequestMapping("api/orders")
 public class OrderController {
+
+    @Value("${mail.adminEmail}")
+    private String adminEmail;
+
     private OrderService orderService;
     private OrderDtoMapper mapper;
+    private EmailService emailService;
 
-    public OrderController(OrderService orderService, OrderDtoMapper mapper) {
+    public OrderController(OrderService orderService,
+                           OrderDtoMapper mapper,
+                           EmailService emailService) {
         this.orderService = orderService;
         this.mapper = mapper;
+        this.emailService = emailService;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDto create(@Validated @RequestBody OrderDto orderDto){
-        return mapper.toDto(orderService.create(mapper.toEntity(orderDto)));
+        OrderDto persistentOrder = mapper.toDto(orderService.create(mapper.toEntity(orderDto)));
+        emailService.sendMessage(orderDto.getUserEmail(),"", EmailMessageType.USER_MESSAGE);
+        emailService.sendMessage(adminEmail,"", EmailMessageType.ADMIN_MESSAGE);
+        return persistentOrder;
     }
 
     @PutMapping("/{orderId}")
