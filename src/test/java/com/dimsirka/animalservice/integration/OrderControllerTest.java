@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = AnimalServiceApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class OrderControllerTest extends AbstractContainer {
+class OrderControllerTest extends AbstractContainer {
     @Autowired
     private TestRestTemplate template;
     @Autowired
