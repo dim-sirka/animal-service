@@ -29,7 +29,7 @@ public class OrderDtoMapper {
                 .userPhoneNumber(order.getUserPhoneNumber())
                 .userName(order.getUserName())
                 .orderStatus(order.getOrderStatus())
-                .animal(Animal.builder().id(order.getId()).build())
+                .animal(Animal.builder().id(order.getAnimalId()).build())
                 .build();
     }
 
