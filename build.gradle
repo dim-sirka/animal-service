@@ -36,9 +36,15 @@ dependencies {
     
     //for dto validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-
     //for tests
     testImplementation 'org.testcontainers:postgresql:1.15.0-rc2'
+    //for spring security(authentication and authorization)
+    implementation 'org.springframework.boot:spring-boot-starter-security:2.3.4.RELEASE'
+    //for return 401 from login endpoint
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    //for sending messages to user and admin regarding the new order
+    implementation 'org.springframework.boot:spring-boot-starter-mail:2.3.4.RELEASE'
+
 }
 
 test {
