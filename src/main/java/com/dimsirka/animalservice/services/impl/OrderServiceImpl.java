@@ -62,9 +62,5 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findById(id).
                 orElseThrow(()-> new OrderNotFoundException("Order with a specified id isn't found!"));
     }
-
-    @Override
-    public void confirm(Order order) {
-    }
 }
 

@@ -55,7 +55,7 @@ public class OrderController {
         orderService.update(persistentOrder);
     }
 
-    @PatchMapping("/confirm/{orderId}")
+    @PutMapping("/confirm/{orderId}")
     @ResponseStatus(HttpStatus.OK)
     public void confirm(@PathVariable Long orderId){
         Order persistentOrder = orderService.getById(orderId);

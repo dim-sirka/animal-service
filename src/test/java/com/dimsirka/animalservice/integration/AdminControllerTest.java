@@ -141,7 +141,7 @@ class AdminControllerTest extends AbstractContainer{
         assertEquals("Incorrect an old password provided", response.getBody().get("error"));
     }
 
-    private static AdminDto getAdminDtoFixture(){
+    private AdminDto getAdminDtoFixture(){
         return AdminDto.builder()
                 .bankAccount("2345678934567143")
                 .email("test@gmail.com")
