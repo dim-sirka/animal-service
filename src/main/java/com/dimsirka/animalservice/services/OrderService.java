@@ -10,4 +10,6 @@ public interface OrderService {
     Order getById(Long id);
 
     List<Order> getAll();
+
+    void confirm(Order order);
 }

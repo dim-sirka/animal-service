@@ -1,13 +1,11 @@
 package com.dimsirka.animalservice.integration;
 
 import com.dimsirka.animalservice.AnimalServiceApplication;
-import com.dimsirka.animalservice.dtoes.AnimalDto;
 import com.dimsirka.animalservice.dtoes.OrderDto;
 import com.dimsirka.animalservice.entities.Animal;
 import com.dimsirka.animalservice.entities.AnimalStatus;
 import com.dimsirka.animalservice.entities.AnimalType;
 import com.dimsirka.animalservice.entities.Order;
-import com.dimsirka.animalservice.mapper.AnimalDtoMapper;
 import com.dimsirka.animalservice.mapper.OrderDtoMapper;
 import com.dimsirka.animalservice.repositories.AnimalRepository;
 import com.dimsirka.animalservice.repositories.OrderRepository;
@@ -26,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 @SpringBootTest(classes = AnimalServiceApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
