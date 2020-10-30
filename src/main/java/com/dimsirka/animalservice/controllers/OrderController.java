@@ -51,4 +51,14 @@ public class OrderController {
     public List<OrderDto> getAll(){
         return mapper.toDtoList(orderService.getAll());
     }
+
+    @PatchMapping("/cancel/{orderId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void cancel(@PathVariable Long orderId){
+        Order persistentOrder = orderService.getById(orderId);
+        persistentOrder.setOrderStatus(OrderStatus.CANCELED);
+        orderService.update(persistentOrder);
+    }
+
+
 }
