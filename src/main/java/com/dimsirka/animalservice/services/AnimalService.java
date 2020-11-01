@@ -10,6 +10,8 @@ public interface AnimalService {
 
     Animal update (Animal animal);
 
+    void updateStatus(Long id, AnimalStatus animalStatus);
+
     Animal getById(Long id);
 
     List<Animal> getAll();

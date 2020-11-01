@@ -58,6 +58,20 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findAll();
     }
 
+    @Override
+    public void cancelOrConfirm(Long id, OrderStatus orderStatus) {
+        Order persistentOrder = getByIdOrThrowException(id);
+        persistentOrder.setOrderStatus(orderStatus);
+        orderRepository.save(persistentOrder);
+
+        //update animalStatus according to an order status
+        AnimalStatus animalStatus = AnimalStatus.ARCHIVE;
+        if(orderStatus.equals(OrderStatus.CANCELED)){
+           animalStatus = AnimalStatus.FREE;
+        }
+        animalService.updateStatus(persistentOrder.getAnimal().getId(), animalStatus);
+    }
+
     private Order getByIdOrThrowException(Long id){
         return orderRepository.findById(id).
                 orElseThrow(()-> new OrderNotFoundException("Order with a specified id isn't found!"));

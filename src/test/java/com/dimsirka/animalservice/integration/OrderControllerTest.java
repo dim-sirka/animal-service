@@ -1,7 +1,6 @@
 package com.dimsirka.animalservice.integration;
 
 import com.dimsirka.animalservice.AnimalServiceApplication;
-import com.dimsirka.animalservice.dtoes.AnimalDto;
 import com.dimsirka.animalservice.dtoes.LoginDto;
 import com.dimsirka.animalservice.dtoes.OrderDto;
 import com.dimsirka.animalservice.entities.Animal;
@@ -62,13 +61,14 @@ class OrderControllerTest extends AbstractContainer {
         final String url = "/api/login";
         LoginDto loginDto = LoginDto.builder().username("test@gmail.com").password("Qwerty123").build();
         HttpEntity<LoginDto> request = new HttpEntity<>(loginDto);
-        //Make call
-        ResponseEntity<String> response =
-                this.template.exchange(url, HttpMethod.POST, request, String.class);
 
+        //Make call
+        ResponseEntity<Map<String, String>> response =
+                this.template.exchange(url, HttpMethod.POST, request,
+                        new ParameterizedTypeReference<Map<String, String>>() {});
 
         //add token to header
-        headers.add("Authorization", "Bearer " + response.getBody());
+        headers.add("Authorization", "Bearer " + response.getBody().get("token"));
     }
 
     @AfterEach

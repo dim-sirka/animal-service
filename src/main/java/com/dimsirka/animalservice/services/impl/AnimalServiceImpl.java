@@ -45,6 +45,13 @@ public class AnimalServiceImpl implements AnimalService{
     }
 
     @Override
+    public void updateStatus(Long id, AnimalStatus animalStatus) {
+        Animal persistentAnimal = getByIdOrThrowException(id);
+        persistentAnimal.setAnimalStatus(animalStatus);
+        animalRepository.save(persistentAnimal);
+    }
+
+    @Override
     public Animal getById(Long id) {
         return getByIdOrThrowException(id);
     }
