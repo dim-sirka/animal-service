@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public final class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
@@ -14,7 +16,10 @@ public final class RestAuthenticationEntryPoint implements AuthenticationEntryPo
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write("Bad credentials");
+
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", "Bad credentials");
+        response.getWriter().write(errors.toString());
     }
 
 }
