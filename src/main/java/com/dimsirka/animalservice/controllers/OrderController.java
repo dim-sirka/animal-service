@@ -1,10 +1,12 @@
 package com.dimsirka.animalservice.controllers;
 
 import com.dimsirka.animalservice.dtoes.OrderDto;
+import com.dimsirka.animalservice.entities.AnimalStatus;
 import com.dimsirka.animalservice.entities.EmailMessageType;
 import com.dimsirka.animalservice.entities.Order;
 import com.dimsirka.animalservice.entities.OrderStatus;
 import com.dimsirka.animalservice.mapper.OrderDtoMapper;
+import com.dimsirka.animalservice.services.AnimalService;
 import com.dimsirka.animalservice.services.EmailService;
 import com.dimsirka.animalservice.services.OrderService;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,17 +24,18 @@ public class OrderController {
 
     @Value("${mail.adminEmail}")
     private String adminEmail;
-
     private OrderService orderService;
     private OrderDtoMapper mapper;
     private EmailService emailService;
+    private AnimalService animalService;
 
     public OrderController(OrderService orderService,
                            OrderDtoMapper mapper,
-                           EmailService emailService) {
+                           EmailService emailService, AnimalService animalService) {
         this.orderService = orderService;
         this.mapper = mapper;
         this.emailService = emailService;
+        this.animalService = animalService;
     }
 
     @PostMapping
@@ -66,16 +69,12 @@ public class OrderController {
     @PutMapping("/cancel/{orderId}")
     @ResponseStatus(HttpStatus.OK)
     public void cancel(@PathVariable Long orderId) {
-        Order persistentOrder = orderService.getById(orderId);
-        persistentOrder.setOrderStatus(OrderStatus.CANCELED);
-        orderService.update(persistentOrder);
+        orderService.cancelOrConfirm(orderId, OrderStatus.CANCELED);
     }
 
     @PutMapping("/confirm/{orderId}")
     @ResponseStatus(HttpStatus.OK)
     public void confirm(@PathVariable Long orderId){
-        Order persistentOrder = orderService.getById(orderId);
-        persistentOrder.setOrderStatus(OrderStatus.CONFIRMED);
-        orderService.update(persistentOrder);
+        orderService.cancelOrConfirm(orderId, OrderStatus.CONFIRMED);
     }
 }
