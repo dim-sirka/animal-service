@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api")
 public class AuthController {
@@ -23,7 +25,7 @@ public class AuthController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public String login(@Validated @RequestBody LoginDto loginDto) {
+    public Map<String, String> login(@Validated @RequestBody LoginDto loginDto) {
         return authService.login(loginDto);
     }
 

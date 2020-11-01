@@ -13,6 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -30,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String login(LoginDto loginDto) {
+    public Map<String, String> login(LoginDto loginDto) {
         try {
             Admin persistentAdmin = adminService.getByEmail(loginDto.getUsername());
             if (encoder.matches(loginDto.getPassword(), persistentAdmin.getPassword())) {
@@ -49,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
         tokenRepository.deleteTokenByAdmin(persistentAdmin);
     }
 
-    private String handleToken(Admin admin){
+    private Map<String, String> handleToken(Admin admin){
         //delete current token if present
         tokenRepository.deleteTokenByAdmin(admin);
 
@@ -58,6 +60,11 @@ public class AuthServiceImpl implements AuthService {
             .token(UUID.randomUUID().toString())
             .admin(admin)
             .build();
-        return tokenRepository.save(token).getToken();
+        tokenRepository.save(token).getToken();
+
+        //prepare json to return
+        Map<String, String> tokenJson = new HashMap<>();
+        tokenJson.put("token", token.getToken());
+        return tokenJson;
     }
 }

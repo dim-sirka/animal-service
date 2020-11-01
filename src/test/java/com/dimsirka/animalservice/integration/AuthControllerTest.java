@@ -69,12 +69,14 @@ class AuthControllerTest extends AbstractContainer {
         final String url = "/api/login";
         LoginDto loginDto = LoginDto.builder().username("test@gmail.com").password("Qwerty123").build();
         HttpEntity<LoginDto> request = new HttpEntity<>(loginDto);
+
         //Make call
-        ResponseEntity<String> response =
-                this.template.exchange(url, HttpMethod.POST, request, String.class);
+        ResponseEntity<Map<String, String>> response =
+                this.template.exchange(url, HttpMethod.POST, request,
+                        new ParameterizedTypeReference<Map<String, String>>() {});
 
         //add token to header
-        headers.add("Authorization", "Bearer " + response.getBody());
+        headers.add("Authorization", "Bearer " + response.getBody().get("token"));
         return headers;
     }
 }
