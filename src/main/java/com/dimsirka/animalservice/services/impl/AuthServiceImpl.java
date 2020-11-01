@@ -38,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
             }
             throw new IllegalArgumentException("Password is incorrect!");
         }catch (RuntimeException e){
-            log.error("Bad credentials for user <{}>", loginDto.getUsername(), e.getLocalizedMessage());
+            log.error("Bad credentials for user <{}>. {}", loginDto.getUsername(), e.getLocalizedMessage());
             throw new BadAdminCredentialsException("Credentials aren't correct");
         }
     }

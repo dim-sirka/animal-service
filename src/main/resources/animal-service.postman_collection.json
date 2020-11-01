@@ -163,7 +163,7 @@
 								}
 							]
 						},
-						"method": "POST",
+						"method": "PUT",
 						"header": [],
 						"url": {
 							"raw": "http://localhost:8080/api/orders/cancel/1",
@@ -190,12 +190,12 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "0adbebdd-ddb4-4cbf-a4da-603065ee3d37",
+									"value": "f4157875-e9fa-47b8-8a9e-032aaa8d740f",
 									"type": "string"
 								}
 							]
 						},
-						"method": "POST",
+						"method": "PUT",
 						"header": [],
 						"url": {
 							"raw": "http://localhost:8080/api/orders/confirm/1",
@@ -374,7 +374,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"password\": \"Mar\",\n    \"username\": \"mslob@gmail.com\"\n}",
+							"raw": "{\n    \"password\": \"Qwerty123\",\n    \"username\": \"user@gmail.com\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
